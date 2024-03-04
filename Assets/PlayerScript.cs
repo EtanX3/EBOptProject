@@ -11,6 +11,8 @@ public class PlayerScript : MonoBehaviour
     Vector2 moveDirection;
     Vector2 mousePos;
 
+    public bool dead = false;
+
     // Update is called once per frame
     void Update()
     {
@@ -33,5 +35,13 @@ public class PlayerScript : MonoBehaviour
         Vector2 aimDirection = mousePos - rb.position;
         float aimAngle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg - 90f;
         rb.rotation = aimAngle;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Enemy"))
+        {
+            dead = true;
+        }
     }
 }
