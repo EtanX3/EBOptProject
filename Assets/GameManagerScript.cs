@@ -11,6 +11,7 @@ public class GameManagerScript : MonoBehaviour
     public int asteroidCount;
     private int level = 0;
     [SerializeField] private EnemyScript asteroidPrefab;
+    public Sprite[] sprites;
 
     private void Start()
     {
@@ -55,6 +56,8 @@ public class GameManagerScript : MonoBehaviour
         //Create Asteroid
         Vector2 worldSpawnPosition = Camera.main.ViewportToWorldPoint(viewportSpawnPosition);
         EnemyScript asteroid = Instantiate(asteroidPrefab, worldSpawnPosition, Quaternion.identity);
+        asteroid.GetComponent<SpriteRenderer>().sprite = sprites[Random.Range(0, sprites.Length)];
+        asteroid.size = Random.Range(2, 4);
         asteroid.gameManager = this;
     }
 
