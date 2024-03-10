@@ -1,38 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
     public int size = 3;
-    public GameManagerScript gameManager;
-    private void Start()
+    private Rigidbody2D rb;
+
+    private void Awake()
     {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    public void StartUp()
+    {
+        rb.velocity = Vector3.zero;
         //Scale based on size
         transform.localScale = .5f * size * Vector3.one;
 
         //Add movement, making sure bigger asteroids are slower
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        Vector2 direction = new Vector2(Random.value, Random.value).normalized;
+        Vector2 direction = Random.insideUnitCircle.normalized;
         float spawnSpeed = Random.Range(4f - size, 5f - size);
         rb.AddForce(direction * spawnSpeed, ForceMode2D.Impulse);
-
-        //assign gamemanager
-        gameManager.asteroidCount++;
+        print("enabled");
     }
+
     public void Damage()
     {
-        gameManager.asteroidCount--;
+        GameManagerScript.instance.asteroidCount--;
 
-        if(size > 1)
+        if (size > 1)
         {
-            for(int i = 0; i <2; i++)
+            for(int i = 0; i < 2; i++)
             {
-                EnemyScript newAsteroid = Instantiate(this, transform.position, Quaternion.identity);
+                EnemyScript newAsteroid = GameManagerScript.instance.GetEnemy();
+                newAsteroid.transform.position = transform.position;
                 newAsteroid.size = size - 1;
-                newAsteroid.gameManager = gameManager;
+                if (newAsteroid.size > 0)
+                {
+                    newAsteroid.StartUp();
+                    newAsteroid.gameObject.SetActive(true);
+                }
+
             }
         }
-        Destroy(gameObject);
+
+        gameObject.SetActive(false);
     }
 }
