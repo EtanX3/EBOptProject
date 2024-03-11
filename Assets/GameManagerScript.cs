@@ -11,6 +11,8 @@ public class GameManagerScript : MonoBehaviour
     private int level = 0;
     [SerializeField] private GameObject asteroidPrefab;
     public Sprite[] sprites;
+    [SerializeField] private ParticleSystem explodeParticle;
+    bool exploded;
 
     private enum Edge
     {
@@ -41,6 +43,12 @@ public class GameManagerScript : MonoBehaviour
         {
             player.SetActive(false);
             canvas.enabled = true;
+            if(!exploded)
+            {
+                explodeParticle.transform.position = player.transform.position;
+                explodeParticle.Play();
+                exploded = true;
+            }
         }
 
         if (asteroidCount == 0)
@@ -53,6 +61,7 @@ public class GameManagerScript : MonoBehaviour
             }
         }
     }
+
     public void SpawnAsteroid()
     {
         // Choose which edge of the screen to spawn on
